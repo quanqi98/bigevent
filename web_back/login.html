@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -29,8 +30,68 @@
             </form>
         </div>
 
-    </div> 
+    </div>
 
+    <!-- Modal  使用bootstrap框架里的模态框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示!</h4>
+                </div>
+                <div class="modal-body">
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <!-- 导入bootstrap文件 -->
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        //给登录按钮注册点击事件
+        $(function () {
+            $('.input_sub').on('click', function (e) {
+                //先清除form表单域里的按钮默认跳转事件
+                e.preventDefault();
+                //获取输入的账号和密码,要清除里面的空格
+                var username = $('.input_txt').val().trim();
+                var passWord = $('.input_pass').val().trim();
+                if (username == '' || passWord == '') {
+                    $('.modal-body').text('账号和密码不能为空哦~~~');
+                    $('#myModal').modal({
+                        keyboard:true,
+                    })
+                    return;
+                };
+                //发送ajax请求
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8000/admin/login',
+                    data: {
+                        user_name: username,
+                        password: passWord
+                    },
+                    success: function (backdata) {
+                        if (backdata.code == 200) {
+                            window.location.href = './index.html';
+                        } else {
+                            $('.modal-body').text('账号和密码错误!!!');
+                            $('#myModal').modal({
+                        keyboard:true,
+                    })
+                        };
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
